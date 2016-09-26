@@ -1,3 +1,5 @@
+set backspace=indent,eol,start
+set splitbelow
 set nu cindent ts=5 sw=4 et smarttab
 syntax on
 if has("autocmd")
@@ -22,8 +24,8 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'taglist.vim'
-Plugin 'winmanager'
-
+Plugin 'Shougo/vimshell.vim'
+Plugin 'Shougo/vimproc.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -116,3 +118,12 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_seed_identifiers_with_syntax=1
 
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif     "离开插入模式后自动关闭预览窗口
+
+
+" vimshell
+function! OpenShell()
+    split
+    resize 10
+    VimShell
+endfunction
+map <C-s> :call OpenShell()<CR> 
