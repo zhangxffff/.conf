@@ -122,8 +122,10 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif     "离开插入模式�
 
 " vimshell
 function! OpenShell()
+    if bufname('') =~ "[VimShell]\."
+    endif
     split
     resize 10
     VimShell
 endfunction
-map <C-s> :call OpenShell()<CR> 
+map <C-y> :call OpenShell()<CR> 
