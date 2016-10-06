@@ -26,6 +26,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'taglist.vim'
 Plugin 'Shougo/vimshell.vim'
 Plugin 'Shougo/vimproc.vim'
+Plugin 'vim-latex/vim-latex'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -54,10 +55,10 @@ function! NoValidBuffer()
     if winnr("$") == 2
         let wd1 = bufname(winbufnr(1))
         let wd2 = bufname(winbufnr(2))
-        if wd1 == t:NERDTreeBufName && wd2 == "__Tag_List__"
+        if exists("t:NERDTreeBufName") && wd1 == t:NERDTreeBufName && wd2 == "__Tag_List__"
             exec 'qa'
         endif
-        if wd1 == "__Tag_List__" && wd2 == t:NERDTreeBufName
+        if exists("t:NERDTreeBufName") && wd1 == "__Tag_List__" && wd2 == t:NERDTreeBufName
             exec 'qa'
         endif
     endif
@@ -129,3 +130,9 @@ function! OpenShell()
     VimShell
 endfunction
 map <C-y> :call OpenShell()<CR> 
+
+
+let g:Tex_FormatDependency_pdf = 'dvi,ps,pdf'
+let g:Tex_CompileRule_dvi = 'xelatex --interaction=nonstopmode $*'
+let g:Tex_CompileRule_ps = 'dvips -Ppdf -o $*.ps $*.dvi'
+let g:Tex_CompileRule_pdf = 'ps2pdf $*.ps'
