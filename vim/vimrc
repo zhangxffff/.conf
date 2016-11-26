@@ -1,6 +1,6 @@
 set backspace=indent,eol,start
 set splitbelow
-set nu cindent ts=5 sw=4 et smarttab
+set nu cindent ts=4 sw=4 et smarttab
 syntax on
 if has("autocmd")
       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
