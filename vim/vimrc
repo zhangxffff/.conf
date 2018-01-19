@@ -32,6 +32,7 @@ Plugin 'lervag/vimtex'
 Plugin 'rdnetto/YCM-Generator'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'jalcine/cmake.vim'
+"Plugin 'ervandew/supertab'
 "Plugin 'vim-latex/vim-latex'
 
 " All of your Plugins must be added before the following line
@@ -117,16 +118,20 @@ let g:ycm_semantic_triggers =  {
   \   'ocaml' : ['.', '#'],
   \   'cpp,objcpp' : ['->', '.', '::', 're![_a-zA-Z][_a-zA-Z][_a-zA-Z]'],
   \   'c' : ['->', '.', 're![a-zA-Z][a-zA-Z]'],
+  \   'go': ['.', 're![a-zA-Z][a-zA-Z]'],
   \   'perl' : ['->'],
   \   'php' : ['->', '::'],
-  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir' : ['.'],
   \   'ruby' : ['.', '::'],
   \   'lua' : ['.', ':'],
   \   'erlang' : [':'],
   \}
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
+
+set completeopt-=preview
+let g:ycm_add_preview_to_completeopt = 0
+"let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_seed_identifiers_with_syntax=1
+
 
 
 if !exists('g:ycm_semantic_triggers')
@@ -161,8 +166,14 @@ function! OpenShell()
 endfunction
 map <C-y> :call OpenShell()<CR> 
 
+let g:NERDTreeDirArrowExpandable = ' '
+let g:NERDTreeDirArrowCollapsible = ' '
 
 "let g:Tex_FormatDependency_pdf = 'dvi,ps,pdf'
 "let g:Tex_CompileRule_dvi = 'xelatex --interaction=nonstopmode $*'
 "let g:Tex_CompileRule_ps = 'dvips -Ppdf -o $*.ps $*.dvi'
 "let g:Tex_CompileRule_pdf = 'ps2pdf $*.ps'
+"
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_list_stop_completion = ['<leader>']
+
