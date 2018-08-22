@@ -38,73 +38,73 @@ filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 
-"let g:NERDTreeWinSize=20
-"let Tlist_WinWidth = 20
+let g:tagbar_width = 24
 
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-let g:netrw_winsize = 20
-augroup ProjectDrawer
-    autocmd!
-    autocmd VimEnter * :TagbarToggle
-    autocmd VimEnter * :Vexplore
-augroup END
+let g:netrw_winsize = 15
 
-autocmd VimEnter * wincmd p
+function! SideBarOpen()
+    if winwidth('%') < 100
+        return
+    endif
+    Vexplore
+    wincmd p
+    TagbarToggle
+endfunction
 
-"function! NERDTlistToggle()
-"    if winwidth('%') < 100
-"        return
-"    endif
-"    TagbarToggle
-"    NERDTree
-"    wincmd p
-"endfunction
-"
-"function! NERDTlistClose()
-"    TlistClose
-"    NERDTreeClose
-"endfunction
-"
-"function! NoValidBuffer()
-"    if winnr("$") == 2
-"        let wd1 = bufname(winbufnr(1))
-"        let wd2 = bufname(winbufnr(2))
-"        if exists("t:NERDTreeBufName") && wd1 == t:NERDTreeBufName && wd2 == "__Tag_List__"
-"            exec 'qa'
-"        endif
-"        if exists("t:NERDTreeBufName") && wd1 == "__Tag_List__" && wd2 == t:NERDTreeBufName
-"            exec 'qa'
-"        endif
-"    endif
-"endfunction
-"
-"function! ResizeWhileChange()
-"    if winwidth('%') < 100
-"        call NERDTlistClose()
-"    endif
-"    if winwidth('%') >= 100
-"        call NERDTlistToggle()
-"    endif
-"endfunction
-"
-""autocmd vimenter * NERDTree
-""autocmd StdinReadPre * let s:std_in=1
-""autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-"map <C-n> :call NERDTlistToggle()<CR> 
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-"autocmd bufenter * call NoValidBuffer()
-"autocmd VimEnter * call NERDTlistToggle()
-"autocmd VimResized * call ResizeWhileChange()
-"
-"
-"
-"let Tlist_Use_Right_Window = 1
-"let Tlist_Enable_Fold_Column = 0
-"
-"let Tlist_Exit_OnlyWindow=1
+function! SideBarToggle()
+    side_exist = 0
+    call SideBarClose()
+    Vexplore
+    wincmd p
+    TagbarToggle
+endfunction
+
+function! SideBarClose()
+    for i in range(1, bufnr('$'))
+        let buf_name = getbufvar(i, '&filetype')
+        if buf_name == 'netrw' || buf_name == 'tagbar'
+            exec 'bdelete' . i
+        endif
+    endfor
+endfunction
+
+function! NoValidBuffer()
+    if winnr("$") == 2
+        let wd1 = getbufvar(winbufnr(1), '&filetype')
+        let wd2 = getbufvar(winbufnr(2), '&filetype')
+        if wd1 == 'tagbar' && wd2 == 'netrw'
+            exec 'qa'
+            return
+        endif
+        if wd1 == 'netrw' && wd2 == 'tagbar'
+            exec 'qa'
+            return
+        endif
+    elseif winnr("$") == 1
+        let wd1 = getbufvar(winbufnr(1), '&filetype')
+        if wd1 == 'tagbar' || wd1 == 'netrw'
+            exec 'qa'
+            return
+        endif
+    endif
+endfunction
+
+function! ResizeWhileChange()
+    if winwidth('%') < 100
+        call SideBarClose()
+    endif
+    if winwidth('%') >= 100
+        call SideBarToggle()
+    endif
+endfunction
+
+autocmd bufenter * call NoValidBuffer()
+autocmd VimResized * call ResizeWhileChange()
+autocmd VimEnter * call SideBarOpen()
+
 
 nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
@@ -172,9 +172,6 @@ function! OpenShell()
     VimShell
 endfunction
 map <C-y> :call OpenShell()<CR> 
-
-let g:NERDTreeDirArrowExpandable = ' '
-let g:NERDTreeDirArrowCollapsible = ' '
 
 "let g:Tex_FormatDependency_pdf = 'dvi,ps,pdf'
 "let g:Tex_CompileRule_dvi = 'xelatex --interaction=nonstopmode $*'
